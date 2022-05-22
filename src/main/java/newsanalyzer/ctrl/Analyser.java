@@ -58,12 +58,11 @@ public class Analyser {
         return shortestAuthor.getAuthor();
     }
 
-    /*public String sortedTitles() throws NewsApiException {
+    public List<Article> sortedTitles() throws NewsApiException {       //Sorts the titles in alphabetical order
         List<Article> sortedTitles = articles.stream()
                 .filter(au -> au.getTitle() != null)
                 .sorted(Comparator.comparing(Article::getTitle))
                 .collect(Collectors.toList());
         return sortedTitles;
-    }*/
-
+    }
 }

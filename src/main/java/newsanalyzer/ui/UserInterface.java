@@ -4,6 +4,8 @@ package newsanalyzer.ui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import newsanalyzer.ctrl.Controller;
 import newsapi.NewsApi;
@@ -13,11 +15,13 @@ import newsapi.enums.Category;
 import newsapi.enums.Country;
 import newsapi.enums.Endpoint;
 import newsapi.enums.Language;
+import newsdownloader.NewsDownloaderException;
 
 public class UserInterface 
 {
 
 	private Controller ctrl = new Controller();
+	private NewsApi latestNewsApi;
 
 	public void getDataFromCtrl1(){
 		System.out.println("Aktuelle Tech-News weltweit");
@@ -27,10 +31,11 @@ public class UserInterface
 				.setQ("")
 				.setEndPoint(Endpoint.TOP_HEADLINES)
 				//.setSourceCountry()
-				.setPageSize("10")
+				.setPageSize("30")
 				.setSourceCategory(Category.technology)
 				.setLanguage(Language.en)
 				.createNewsApi();
+		latestNewsApi = newsApi;
 		try {
 			ctrl.process(newsApi);
 		}catch (NewsApiException e){
@@ -50,6 +55,7 @@ public class UserInterface
 				.setPageSize("30")
 				.setSourceCategory(Category.sports)
 				.createNewsApi();
+		latestNewsApi = newsApi;
 		try {
 			ctrl.process(newsApi);
 		}catch (NewsApiException e){
@@ -69,12 +75,25 @@ public class UserInterface
 				.setPageSize("30")
 				.setSourceCategory(Category.technology)
 				.createNewsApi();
+		latestNewsApi = newsApi;
 		try {
 			ctrl.process(newsApi);
 		}catch (NewsApiException e){
 			System.out.println("An error occurred! " + e.getMessage());
 		}
 
+	}
+
+	public void downloadLastSearch(){
+		if(latestNewsApi != null) {
+			try {
+				ctrl.htmlDownloader(latestNewsApi);
+			} catch (NewsApiException | NewsDownloaderException e) {
+				System.out.println("An error occurred! " + e.getMessage());
+			}
+		}else{
+			System.out.println("First search for a Topic!");
+		}
 	}
 	
 	public void getDataForCustomInput() {
@@ -85,10 +104,11 @@ public class UserInterface
 	public void start() {
 		Menu<Runnable> menu = new Menu<>("User Interface");
 		menu.setTitel("Wählen Sie aus:");
-		menu.insert("a", "Aktuelle Techn-News weltweit", this::getDataFromCtrl1);
+		menu.insert("a", "Aktuelle Tech-News weltweit", this::getDataFromCtrl1);
 		menu.insert("b", "Aktuelle Sport-News aus Österreich", this::getDataFromCtrl2);
 		menu.insert("c", "Aktuelle Apple-News weltweit", this::getDataFromCtrl3);
-		menu.insert("d", "Choice User Input:",this::getDataForCustomInput);
+		menu.insert("d", "Choice User Input: currently unavailable",this::getDataForCustomInput);
+		menu.insert("e", "Download last search", this::downloadLastSearch);
 		menu.insert("q", "Quit", null);
 		Runnable choice;
 		while ((choice = menu.exec()) != null) {

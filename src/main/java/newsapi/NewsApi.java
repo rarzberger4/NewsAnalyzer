@@ -114,7 +114,7 @@ public class NewsApi {
         try {
             obj = new URL(url);
         } catch (MalformedURLException e) {
-            //TODO improve ErrorHandling
+
             throw new NewsApiException("A Problem with the URL \""+url+"\" has occurred - "+ e.getMessage());
         }
         HttpURLConnection con;
@@ -129,10 +129,9 @@ public class NewsApi {
                 response.append(inputLine);
             }
         } catch(UnknownServiceException e){
-            //System.out.println("Error UnknownServiceException - There is something wrong with the connection to the URL ("+e.getMessage());
             throw new NewsApiException("Error UnknownServiceException - There is something wrong with the connection to the URL \""+url+"\" "+e.getMessage());
         } catch (IOException e) {
-            //TODO improve ErrorHandling
+
             throw new NewsApiException("An Error has occurred trying to connect to the URL \""+url+"\" "+e.getMessage());
         }finally {
             try{
@@ -146,7 +145,7 @@ public class NewsApi {
     }
 
     protected String buildURL() throws NewsApiException {
-        //TODO ErrorHandling
+
         String urlbase;
         StringBuilder sb = null;
 
@@ -215,7 +214,7 @@ public class NewsApi {
                 throw new NewsApiException("Unable to process the Json-File "+e.getMessage());
             }
         }
-        //TODO improve ErrorHandling
+
 
         if(newsReponse == null){
             throw new NewsApiException("Something went wrong making the newsResponse-File");
